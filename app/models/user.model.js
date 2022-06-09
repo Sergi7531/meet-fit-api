@@ -9,7 +9,7 @@ const User = function(user) {
 User.create = (newUser, result) => {
   sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      console.log("POST USER:", err.message, "for user" , newUser.username , (newUser.email));
       result(err, null);
       return;
     }
@@ -18,19 +18,19 @@ User.create = (newUser, result) => {
   });
 };
 User.findById = (id, result) => {
-  sql.query(`SELECT * FROM newUser WHERE id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM users WHERE id = ${id}`, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      console.log("GET (findById) USER:", err.message, "for id" , id);
       result(err, null);
       return;
     }
     if (res.length) {
-      console.log("found user: ", res[0]);
+      console.log("GET (findById) USER: ", res.length);
       result(null, res[0]);
       return;
     }
     // not found User with the id
-    result({ kind: "not_found" }, null);
+    console.log("404 - USER (findById) - User not found with ID:", id)
   });
 };
 User.getAll = (username, result) => {
@@ -44,7 +44,11 @@ User.getAll = (username, result) => {
       result(null, err);
       return;
     }
-    console.log("users: ", res);
+    if(username) {
+      console.log("GET (all) USER (QUERY PARAM username='" + username + "'):", res.length);
+    } else {
+      console.log("GET (all) USER:", res.length);
+    }
     result(null, res);
   });
 };
@@ -55,7 +59,7 @@ User.getAllActive = result => {
       result(null, err);
       return;
     }
-    console.log("tutorials: ", res);
+    console.log("GET (actives) USER:", res.length);
     result(null, res);
   });
 };
