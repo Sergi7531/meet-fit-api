@@ -75,7 +75,7 @@ User.updateById = (id, user, result) => {
       }
       if (res.affectedRows == 0) {
         // not found User with the id
-        result({ kind: "not_found" }, null);
+        result({ kind: "404" }, null);
         return;
       }
       console.log("updated user: ", { id: id, ...user });
@@ -92,7 +92,7 @@ User.remove = (id, result) => {
     }
     if (res.affectedRows == 0) {
       // not found User with the id
-      result({ kind: "not_found" }, null);
+      result({ kind: "404" }, null);
       return;
     }
     console.log("deleted user with id: ", id);
@@ -104,6 +104,11 @@ User.removeAll = result => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
+      return;
+    }
+    if (res.affectedRows == 0) {
+      // not found User with the id
+      result({ kind: "404" }, null);
       return;
     }
     console.log(`deleted ${res.affectedRows} users`);

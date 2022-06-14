@@ -12,9 +12,9 @@ module.exports = app => {
     // Update a User with id
     router.put("/:id", users.updateById);
     // Delete a User with id
-    router.delete("/:id", users.delete);
+    router.delete("/:id", users.remove);  
     // Delete all Users
-    router.delete("/", users.deleteAll);
+    router.delete("/", users.removeAll);
     app.use('/api/users', router);
   };
   

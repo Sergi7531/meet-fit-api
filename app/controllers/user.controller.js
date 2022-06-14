@@ -48,7 +48,7 @@
   exports.findOne = (req, res) => {
     User.findById(req.params.id, (err, data) => {
       if (err) {
-        if (err.kind === "not_found") {
+        if (err.kind === "404") {
           res.status(404).send({
             message: `404 - USER (findById) - User not found with ID: ${req.params.id}.`
           });
@@ -74,23 +74,57 @@
   // Update a User identified by the id in the request
   exports.updateById = (req, res) => {
     if(!req.body) {
-      res.send({
-        message: res.status + " - USER PUT (/) FAILED, ID: " + req.params.id
-      })
+      if(err) {
+        res.status(Number.parseInt(err.kind)).send ({
+          message: err.kind + " - USER DELETE (/users/) ID: " + req.params.id
+        })
+        return;
+      }
     }
       console.log(res.status + " - USER PUT, ID: " + req.params.id)
 
       User.updateById(req.params.id, new User(req.body), (err, data) => {
             res.send({
-              message: " - USER PUT (/) ID: " + req.params.id
+              message: " - USER PUT (/users/) ID: " + req.params.id
             })
       })
   };
   // Delete a User with the specified id in the request
-  exports.delete = (req, res) => {
+  exports.remove = (req, res) => {
+
+    User.remove(req.params.id, (err, data) => {
+      if(err) {
+        res.status(Number.parseInt(err.kind)).send ({
+          message: err.kind + " - USER DELETE (/users/) ID: " + req.params.id
+        })
+        return;
+      }
+      
+      res.send({
+        message: "200 - USER DELETE (/users/) ID: " + req.params.id
+      })
+
+    });
 
   };
   // Delete all Users from the database.
-  exports.deleteAll = (req, res) => {
+  exports.removeAll = (req, res) => {
 
-  };
+    User.removeAll((err, data) => {
+
+      if(err) {
+        res.status(Number.parseInt(err.kind)).send ({
+          message: err.kind + " - USER DELETE ALL (/users/deleteAll)"
+        })
+        return;
+      }
+
+      res.status(500).send ({
+        message: "500 - USER DELETE ALL(/users/deleteAll)"
+      })
+
+      res.send({
+        message: "200 - USER DELETE ALL(/users/deleteAll) | DELETED: " + res.length
+      });
+    });
+  }
