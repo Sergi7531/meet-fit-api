@@ -10,7 +10,7 @@ module.exports = app => {
     // Retrieve a single User by id
     router.get("/findById/:id", users.findOne);
     // Update a User with id
-    router.put("/:id", users.update);
+    router.put("/:id", users.updateById);
     // Delete a User with id
     router.delete("/:id", users.delete);
     // Delete all Users
